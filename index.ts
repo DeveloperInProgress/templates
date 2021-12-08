@@ -10,6 +10,7 @@ export interface Template {
   name: string;
   description: string;
   remote: string;
+  branch: string;
   network: Network;
   specVersion: '0.0.1' | '0.2.0';
 }
@@ -35,16 +36,9 @@ export async function fetchTemplates(): Promise<Template[] | void> {
  */
 export async function downloadTemplate(template: Template, localPath: string) {
   const projectPath = path.join(localPath, template.name);
-  try {
-    await simpleGit().clone(template.remote, projectPath);
-  } catch (e) {
-    throw new Error(`Failed to clone starter template from git, ${e}`);
-  }
+  await simpleGit()
+    .clone(template.remote, projectPath, ['-b', template.branch, '--single-branch'])
+    .catch((e) => {
+      throw new Error(`Failed to clone starter template from git, ${e}`);
+    });
 }
-
-async function main() {
-  let templates = (await fetchTemplates()) as Template[];
-  downloadTemplate(templates[0], './');
-}
-
-main();
