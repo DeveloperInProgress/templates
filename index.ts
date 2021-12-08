@@ -1,4 +1,6 @@
-import https from 'https';
+import * as path from 'path';
+import axios from 'axios';
+import simpleGit from 'simple-git';
 
 const TEMPLATES_REMOTE = 'https://raw.githubusercontent.com/subquery/templates/dev/templates.json';
 
@@ -12,20 +14,37 @@ export interface Template {
   specVersion: '0.0.1' | '0.2.0';
 }
 
-// Fetch templates from remote
-export function fromRemote() {
-  let body = '';
-  https.get(TEMPLATES_REMOTE, (response) => {
-    response.on('data', (chunk) => {
-      body += chunk;
+/**
+ * @description Fetch templates from Github remote
+ * @returns {Promise<Template[] | void>}
+ */
+export async function fetchTemplates(): Promise<Template[] | void> {
+  return axios
+    .create()
+    .get(TEMPLATES_REMOTE)
+    .then(({data}) => data as Template[])
+    .catch((err) => {
+      throw new Error(`Unable to reach endpoint '${TEMPLATES_REMOTE}', ${err}`);
     });
-
-    response.on('end', () => {
-      console.log(body);
-      const templates = JSON.parse(body) as Template[];
-      console.log(templates);
-    });
-
-    response.on('error', () => {});
-  });
 }
+
+/**
+ * @param {Template} template Template to download
+ * @param {string} localPath Local path to clone template to
+ * @description Download a template from Github
+ */
+export async function downloadTemplate(template: Template, localPath: string) {
+  const projectPath = path.join(localPath, template.name);
+  try {
+    await simpleGit().clone(template.remote, projectPath);
+  } catch (e) {
+    throw new Error(`Failed to clone starter template from git, ${e}`);
+  }
+}
+
+async function main() {
+  let templates = (await fetchTemplates()) as Template[];
+  downloadTemplate(templates[0], './');
+}
+
+main();

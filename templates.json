@@ -2,7 +2,7 @@
   {
     "name": "subql-starter",
     "description": "Starter project for subquery",
-    "remote": "https://github.com/subquery/subql-starter/tree/v0.2.0",
+    "remote": "https://github.com/subquery/subql-starter/",
     "network": "Polkadot",
     "specVersion": "0.2.0"
   }
