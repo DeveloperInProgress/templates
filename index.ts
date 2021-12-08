@@ -4,14 +4,12 @@ import simpleGit from 'simple-git';
 
 const TEMPLATES_REMOTE = 'https://raw.githubusercontent.com/subquery/templates/dev/templates.json';
 
-export type Network = 'Polkadot' | 'Kusama' | 'Acala' | 'Moonriver';
-
 export interface Template {
   name: string;
   description: string;
   remote: string;
   branch: string;
-  network: Network;
+  network: string;
   specVersion: '0.0.1' | '0.2.0';
 }
 
@@ -32,13 +30,13 @@ export async function fetchTemplates(): Promise<Template[] | void> {
 /**
  * @param {Template} template Template to download
  * @param {string} localPath Local path to clone template to
- * @description Download a template from Github
+ * @description Download a template from Github remote
  */
 export async function downloadTemplate(template: Template, localPath: string) {
   const projectPath = path.join(localPath, template.name);
   await simpleGit()
     .clone(template.remote, projectPath, ['-b', template.branch, '--single-branch'])
-    .catch((e) => {
-      throw new Error(`Failed to clone starter template from git, ${e}`);
+    .catch((err) => {
+      throw new Error(`Failed to clone template from Github, ${err}`);
     });
 }
