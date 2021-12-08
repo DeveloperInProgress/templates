@@ -3,5 +3,6 @@
 !index.ts
 !package.json
 !tsconfig.json
+!templates.json
 !yarn.lock
 !README.md

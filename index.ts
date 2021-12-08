@@ -1,3 +1,7 @@
+import https from 'https';
+
+const TEMPLATES_REMOTE = 'https://raw.githubusercontent.com/subquery/templates/dev/templates.json';
+
 export type Network = 'Polkadot' | 'Kusama' | 'Acala' | 'Moonriver';
 
 export interface Template {
@@ -8,12 +12,20 @@ export interface Template {
   specVersion: '0.0.1' | '0.2.0';
 }
 
-export let templates: Template[] = [
-  {
-    name: 'subql-starter',
-    description: 'Starter project for subquery',
-    remote: 'https://github.com/subquery/subql-starter/tree/v0.2.0',
-    network: 'Polkadot',
-    specVersion: '0.2.0',
-  },
-];
+// Fetch templates from remote
+export function fromRemote() {
+  let body = '';
+  https.get(TEMPLATES_REMOTE, (response) => {
+    response.on('data', (chunk) => {
+      body += chunk;
+    });
+
+    response.on('end', () => {
+      console.log(body);
+      const templates = JSON.parse(body) as Template[];
+      console.log(templates);
+    });
+
+    response.on('error', () => {});
+  });
+}
