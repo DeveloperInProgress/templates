@@ -1,9 +1,10 @@
 *
 !.gitignore
+!.npmignore
+!.prettierrc
 !index.ts
 !package.json
 !tsconfig.json
 !templates.json
 !yarn.lock
-!.prettierrc
 !README.md
