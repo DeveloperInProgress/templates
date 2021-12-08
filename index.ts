@@ -10,7 +10,7 @@ export interface Template {
   remote: string;
   branch: string;
   network: string;
-  specVersion: '0.0.1' | '0.2.0';
+  specVersion: string;
 }
 
 /**
