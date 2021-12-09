@@ -1,7 +1,8 @@
 {
   "name": "@subql/templates",
   "version": "0.0.0",
-  "main": "index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": "git@github.com:subquery/templates.git",
   "author": "wqsz7xn <wqsz7xn@protonmail.com>",
   "license": "MIT",
